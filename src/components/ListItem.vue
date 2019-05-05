@@ -22,6 +22,8 @@ label {
   color: #333;
   font-size: 18px;
   margin: 0;
+  display: block;
+  flex-grow: 1;
 }
 .todo__list-item {
   position: relative;
@@ -31,14 +33,21 @@ label {
     margin-bottom: 0;
   }
 }
+.todo__list-item-text {
+  transition: .15s ease-in;
+}
+
+.todo__list-item-wrapper {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+}
 .todo__checkbox + .todo__list-item-text:hover:before {
   color: #fe4365;
 }
 .todo__checkbox {
   display: none;
-}
-.todo__list-item-text {
-  transition: .15s ease-in;
 }
 .todo__checkbox + .todo__list-item-text:before {
   content: "";

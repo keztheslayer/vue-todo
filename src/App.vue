@@ -5,13 +5,15 @@
             <div class="todo">
               <h1 class="todo__title">Todo-list on Vue.js</h1>
               <list-item v-for="(item, index) in list" :key="index" :isChecked="item.isChecked">
-                <label>
-                  <input class="todo__checkbox" type="checkbox" v-model="item.isChecked">
-                  <span class="todo__list-item-text">{{ item.text }}</span>
-                </label>
-                <button type="button" class="close todo__remove-btn" @click="remove(index)">
-                  <span>&times;</span>
-                </button>
+                <div class="todo__list-item-wrapper">
+                  <label>
+                    <input class="todo__checkbox" type="checkbox" v-model="item.isChecked">
+                    <span class="todo__list-item-text">{{ item.text }}</span>
+                  </label>
+                  <button type="button" class="close todo__remove-btn" @click="remove(index)">
+                    <span>&times;</span>
+                  </button>
+                </div>
                 <hr v-if="index < list.length - 1">
               </list-item>
               <form class="todo__add" @submit.prevent="add">
@@ -181,8 +183,8 @@ export default {
     }
 
     &__remove-btn {
-      display: inline-block;
-      vertical-align: middle;
+      display: block;
+      padding-left: 6px;
 
       &:focus {
         outline: none;
