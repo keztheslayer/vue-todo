@@ -21,7 +21,7 @@ label {
   cursor: pointer;
   color: #333;
   display: block;
-  font-size: 1.2em;
+  font-size: 18px;
   margin: 0;
 }
 .todo__checkbox + .todo__list-item:hover:before {

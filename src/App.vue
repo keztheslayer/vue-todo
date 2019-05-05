@@ -1,15 +1,19 @@
 <template>
   <div class="container">
       <div class="row">
-          <div class="col-8 mx-auto">
+          <div class="col-lg-8 col-12 mx-auto">
             <div class="todo">
-              <h1 class="todo__title">The awesome to-do list on Vue.js</h1>
+              <h1 class="todo__title">Todo-list on Vue.js</h1>
               <list-item v-for="(item, index) in list" :key="index" :isChecked="item.isChecked">
                 <label>
                   <input class="todo__checkbox" type="checkbox" v-model="item.isChecked">
                   <span class="todo__list-item">{{ item.text }}</span>
                 </label>
               </list-item>
+              <form class="todo__add" @submit.prevent="add">
+                <input v-model="newItem" type="text" class="todo__add-input" placeholder="Type something here..." required>
+                <input type="submit" class="todo__add-btn" value="Add" :disabled="!newItem.length">
+              </form>
             </div>
           </div>
       </div>
@@ -37,7 +41,8 @@ export default {
           text: 'Random finished task',
           isChecked: true
         }
-      ]
+      ],
+      newItem: ''
     }
   },
   computed: {
@@ -57,6 +62,18 @@ export default {
     }
   },
   methods: {
+    add () {
+      let item = this.newItem
+
+      if (item) {
+        this.list.push({
+          text: item,
+          isChecked: false
+        })
+      }
+
+      this.newItem = ''
+    },
     remove (i) {
       this.list.splice(i, 1)
     }
@@ -81,6 +98,77 @@ export default {
       font-size: 36px;
       color: #333;
       margin-bottom: 24px;
+
+      @media (max-width: 768px){
+        font-size: 26px;
+      }
+    }
+
+    &__add {
+      width: 100%;
+      display: flex;
+      margin-top: 36px;
+
+      @media (max-width: 768px){
+        flex-direction: column;
+      }
+    }
+
+    &__add-input {
+      display: block;
+      flex-grow: 1;
+      padding: 6px 12px;
+      margin-right: 6px;
+      font-size: 15px;
+      line-height: 1.5;
+      color: #333;
+      background-color: #fff;
+      background-clip: padding-box;
+      border: 1px solid #ced4da;
+      border-radius: 4px;
+      transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+
+      &:focus {
+        outline: none;
+      }
+    }
+
+    &__add-btn {
+      font-size: 17px;
+      line-height: 1.52947;
+      font-weight: 400;
+      letter-spacing: -.021em;
+      font-family: "SF Pro Text","Myriad Set Pro",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","SF Pro Icons","Apple Legacy Icons","Helvetica Neue","Helvetica","Arial",sans-serif;
+      background: linear-gradient(#42a1ec, #0070c9);
+      border-color: #ced4da;
+      border-width: 1px;
+      border-style: solid;
+      border-radius: 4px;
+      color: #fff;
+      cursor: pointer;
+      display: block;
+      min-width: 30px;
+      padding-left: 15px;
+      padding-right: 15px;
+      padding-top: 3px;
+      padding-bottom: 4px;
+      text-align: center;
+      white-space: nowrap;
+
+      &:active, &:focus {
+        background: linear-gradient(#3d94d9, #0067b9);
+        border-color: #006dbc;
+        outline: none;
+      }
+
+      &:disabled {
+        background: #00b05a;
+        opacity: 0.4;
+      }
+
+      @media (max-width: 768px){
+        margin-top: 12px;
+      }
     }
   }
   @import "https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css";
