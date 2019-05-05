@@ -20,25 +20,27 @@ export default {
 label {
   cursor: pointer;
   color: #333;
-  display: block;
   font-size: 18px;
   margin: 0;
 }
-.todo__checkbox + .todo__list-item:hover:before {
-  color: #fe4365;
-}
-.todo__checkbox {
-  display: none;
-}
 .todo__list-item {
-  margin-bottom: 12px;
-  transition: .15s ease-in;
+  position: relative;
+  margin-bottom: 6px;
 
   &:last-child {
     margin-bottom: 0;
   }
 }
-.todo__checkbox + .todo__list-item:before {
+.todo__checkbox + .todo__list-item-text:hover:before {
+  color: #fe4365;
+}
+.todo__checkbox {
+  display: none;
+}
+.todo__list-item-text {
+  transition: .15s ease-in;
+}
+.todo__checkbox + .todo__list-item-text:before {
   content: "";
   color: #dddfe6;
   font-family: "fontAwesome";
@@ -47,15 +49,15 @@ label {
   display: inline-block;
   margin-right: 8px;
 }
-.todo__checkbox:checked + .todo__list-item:before {
+.todo__checkbox:checked + .todo__list-item-text:before {
   content: "";
   color: #fe4365;
   animation: tick 150ms ease-in;
 }
-.todo__checkbox:checked + .todo__list-item {
+.todo__checkbox:checked + .todo__list-item-text {
   color: #7e7e7e;
 }
-.todo__checkbox:disabled + .todo__list-item:before {
+.todo__checkbox:disabled + .todo__list-item-text:before {
   content: "";
   color: #dddfe6;
 }

@@ -7,13 +7,22 @@
               <list-item v-for="(item, index) in list" :key="index" :isChecked="item.isChecked">
                 <label>
                   <input class="todo__checkbox" type="checkbox" v-model="item.isChecked">
-                  <span class="todo__list-item">{{ item.text }}</span>
+                  <span class="todo__list-item-text">{{ item.text }}</span>
                 </label>
+                <button type="button" class="close todo__remove-btn" @click="remove(index)">
+                  <span>&times;</span>
+                </button>
+                <hr v-if="index < list.length - 1">
               </list-item>
               <form class="todo__add" @submit.prevent="add">
                 <input v-model="newItem" type="text" class="todo__add-input" placeholder="Type something here..." required>
                 <input type="submit" class="todo__add-btn" value="Add" :disabled="!newItem.length">
               </form>
+              <hr>
+              <div class="todo__counters">
+                <div class="todo__counter">Total: {{ total }}</div>
+                <div class="todo__counter">Finished: {{ finished }}</div>
+              </div>
             </div>
           </div>
       </div>
@@ -38,7 +47,7 @@ export default {
           isChecked: false
         },
         {
-          text: 'Random finished task',
+          text: 'This task is already done!',
           isChecked: true
         }
       ],
@@ -169,6 +178,23 @@ export default {
       @media (max-width: 768px){
         margin-top: 12px;
       }
+    }
+
+    &__remove-btn {
+      display: inline-block;
+      vertical-align: middle;
+
+      &:focus {
+        outline: none;
+      }
+    }
+
+    &__counters {
+      color: #333;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
   }
   @import "https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css";
