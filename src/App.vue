@@ -4,25 +4,28 @@
           <div class="col-lg-8 col-12 mx-auto">
             <div class="todo">
               <h1 class="todo__title">Todo-list on Vue.js</h1>
-              <list-item v-for="(item, index) in list" :key="index" :isChecked="item.isChecked">
-                <div class="todo__list-item-wrapper">
-                  <label>
-                    <input class="todo__checkbox" type="checkbox" v-model="item.isChecked">
-                    <span class="todo__list-item-text">{{ item.text }}</span>
-                  </label>
-                  <button type="button" class="close todo__remove-btn" @click="remove(index)">
-                    <span>&times;</span>
-                  </button>
+              <div v-for="(item, index) in list" :key="index" :isChecked="item.isChecked">
+                <div class="todo__list-item" :class="item.isChecked ? 'todo__list-item_state_finished' : ''">
+                  <div class="todo__list-item-wrapper">
+                    <label class="todo__label">
+                      <input class="todo__checkbox" type="checkbox" v-model="item.isChecked">
+                      <span class="todo__list-item-text">{{ item.text }}</span>
+                    </label>
+                    <button type="button" class="close todo__remove-btn" @click="remove(index)">
+                      <span>&times;</span>
+                    </button>
+                  </div>
+                  <hr v-if="index < list.length - 1">
                 </div>
-                <hr v-if="index < list.length - 1">
-              </list-item>
+              </div>
               <form class="todo__add" @submit.prevent="add">
                 <input v-model="newItem" type="text" class="todo__add-input" placeholder="Type something here..." required>
-                <input type="submit" class="todo__add-btn" value="Add" :disabled="!newItem.length">
+                <input type="submit" class="btn btn-primary btn-sm todo__add-btn" value="Add" :disabled="!newItem.length">
               </form>
               <hr>
               <div class="todo__counters">
                 <div class="todo__counter">Total: {{ total }}</div>
+                <button class="btn btn-primary btn-sm todo__clean-btn" @click="clean">Remove all finished tasks</button>
                 <div class="todo__counter">Finished: {{ finished }}</div>
               </div>
             </div>
@@ -32,11 +35,7 @@
 </template>
 
 <script>
-import ListItem from './components/ListItem.vue'
 export default {
-  components: {
-    ListItem: ListItem
-  },
   data () {
     return {
       list: [
@@ -87,6 +86,11 @@ export default {
     },
     remove (i) {
       this.list.splice(i, 1)
+    },
+    clean () {
+      this.list = this.list.filter((item) => {
+        return !item.isChecked
+      })
     }
   }
 }
@@ -125,6 +129,14 @@ export default {
       }
     }
 
+    &__add-btn {
+      border-radius: 4px;
+
+      @media (max-width: 768px){
+        margin-top: 12px;
+      }
+    }
+
     &__add-input {
       display: block;
       flex-grow: 1;
@@ -142,43 +154,9 @@ export default {
       &:focus {
         outline: none;
       }
-    }
-
-    &__add-btn {
-      font-size: 17px;
-      line-height: 1.52947;
-      font-weight: 400;
-      letter-spacing: -.021em;
-      font-family: "SF Pro Text","Myriad Set Pro",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","SF Pro Icons","Apple Legacy Icons","Helvetica Neue","Helvetica","Arial",sans-serif;
-      background: linear-gradient(#42a1ec, #0070c9);
-      border-color: #ced4da;
-      border-width: 1px;
-      border-style: solid;
-      border-radius: 4px;
-      color: #fff;
-      cursor: pointer;
-      display: block;
-      min-width: 30px;
-      padding-left: 15px;
-      padding-right: 15px;
-      padding-top: 3px;
-      padding-bottom: 4px;
-      text-align: center;
-      white-space: nowrap;
-
-      &:active, &:focus {
-        background: linear-gradient(#3d94d9, #0067b9);
-        border-color: #006dbc;
-        outline: none;
-      }
-
-      &:disabled {
-        background: #00b05a;
-        opacity: 0.4;
-      }
 
       @media (max-width: 768px){
-        margin-top: 12px;
+        margin-right: 0;
       }
     }
 
@@ -197,6 +175,84 @@ export default {
       display: flex;
       align-items: center;
       justify-content: space-between;
+
+      @media (max-width: 768px){
+        flex-direction: column;
+      }
+    }
+
+    &__clean-btn {
+      @media (max-width: 768px){
+        order: -1;
+        flex-grow: 1;
+        margin-bottom: 12px;
+      }
+    }
+
+  &__label {
+    cursor: pointer;
+    color: #333;
+    font-size: 18px;
+    margin: 0;
+    display: block;
+    flex-grow: 1;
+  }
+  &__list-item {
+    position: relative;
+    margin-bottom: 6px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  &__list-item-text {
+    transition: .15s ease-in;
+  }
+
+  &__list-item-wrapper {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+  }
+  &__checkbox + &__list-item-text:hover:before {
+    color: #fe4365;
+  }
+  &__checkbox {
+    display: none;
+  }
+  &__checkbox + &__list-item-text:before {
+    content: "";
+    color: #dddfe6;
+    font-family: "fontAwesome";
+    line-height: 1;
+    width: 1em;
+    display: inline-block;
+    margin-right: 8px;
+  }
+  &__checkbox:checked + &__list-item-text:before {
+    content: "";
+    color: #fe4365;
+    animation: tick 150ms ease-in;
+  }
+  &__checkbox:checked + &__list-item-text {
+    color: #7e7e7e;
+  }
+  &__checkbox:disabled + &__list-item-text:before {
+    content: "";
+    color: #dddfe6;
+  }
+  }
+
+  @keyframes tick {
+    0% {
+      transform: scale(0);
+    }
+    90% {
+      transform: scale(1.3);
+    }
+    100% {
+      transform: scale(1);
     }
   }
   @import "https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css";
