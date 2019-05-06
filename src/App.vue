@@ -35,25 +35,30 @@
 </template>
 
 <script>
+const STORAGE_KEY = 'todo-storage'
+
 export default {
   data () {
     return {
       list: [
         {
-          text: 'Finish this',
+          text: 'Add something',
           isChecked: false
         },
         {
-          text: 'Add something new',
+          text: 'Remove this',
           isChecked: false
         },
         {
-          text: 'This task is already done!',
+          text: 'This task is already finished',
           isChecked: true
         }
       ],
       newItem: ''
     }
+  },
+  created () {
+    this.list = JSON.parse(localStorage.getItem(STORAGE_KEY) || this.list)
   },
   computed: {
     total () {
@@ -80,17 +85,22 @@ export default {
           text: item,
           isChecked: false
         })
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(this.list))
       }
 
       this.newItem = ''
     },
     remove (i) {
       this.list.splice(i, 1)
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.list))
     },
     clean () {
       this.list = this.list.filter((item) => {
         return !item.isChecked
       })
+    },
+    saveToLocal () {
+      localStorage.setItem('list', this.list)
     }
   }
 }
