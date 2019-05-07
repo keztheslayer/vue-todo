@@ -98,6 +98,7 @@ export default {
       this.list = this.list.filter((item) => {
         return !item.isChecked
       })
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.list))
     },
     saveToLocal () {
       localStorage.setItem('list', this.list)
