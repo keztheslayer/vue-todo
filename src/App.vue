@@ -4,7 +4,7 @@
             <div class="col-lg-8 col-12 mx-auto">
                 <div class="todo">
                     <h1 class="todo__title">
-                        Todo-list on Vue.js
+                        {{ title }}
                     </h1>
                     <app-item
                         v-for="(item, index) in list"
@@ -15,6 +15,7 @@
                         :hide-divider="index < list.length - 1"
                         @itemRemoved="remove"
                         @itemChecked="check"
+                        @itemTextChanged="edit"
                     />
                     <app-form
                         @itemAdded="add"
@@ -47,7 +48,8 @@ export default {
     },
     data() {
         return {
-            list : [
+            title : 'To-Do list made on Vue.js',
+            list  : [
                 {
                     text      : 'Add something',
                     isChecked : false,
@@ -96,14 +98,20 @@ export default {
             item.isChecked = !item.isChecked;
             localStorage.setItem( STORAGE_KEY, JSON.stringify( this.list ) );
         },
-        remove( i ) {
-            this.list.splice( i, 1 );
-            localStorage.setItem( STORAGE_KEY, JSON.stringify( this.list ) );
-        },
         clean() {
             this.list = this.list.filter( ( item ) => {
                 return !item.isChecked;
             } );
+            localStorage.setItem( STORAGE_KEY, JSON.stringify( this.list ) );
+        },
+        edit( newText, i ) {
+            let item = this.list[ i ];
+
+            item.text = newText;
+            localStorage.setItem( STORAGE_KEY, JSON.stringify( this.list ) );
+        },
+        remove( i ) {
+            this.list.splice( i, 1 );
             localStorage.setItem( STORAGE_KEY, JSON.stringify( this.list ) );
         },
         saveToLocal() {
