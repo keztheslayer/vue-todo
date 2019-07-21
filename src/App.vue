@@ -6,35 +6,16 @@
                     <h1 class="todo__title">
                         Todo-list on Vue.js
                     </h1>
-                    <div 
-                        v-for="(item, index) in list" 
-                        :key="index" 
-                        :isChecked="item.isChecked"
-                    >
-                        <div 
-                            class="todo__list-item" 
-                            :class="item.isChecked ? 'todo__list-item_state_finished' : ''"
-                        >
-                            <div class="todo__list-item-wrapper">
-                                <label class="todo__label">
-                                    <input
-                                        v-model="item.isChecked"
-                                        class="todo__checkbox" 
-                                        type="checkbox" 
-                                    >
-                                    <span class="todo__list-item-text">{{ item.text }}</span>
-                                </label>
-                                <button 
-                                    type="button" 
-                                    class="close todo__remove-btn"
-                                    @click="remove(index)"
-                                >
-                                    <span>&times;</span>
-                                </button>
-                            </div>
-                            <hr v-if="index < list.length - 1">
-                        </div>
-                    </div>
+                    <app-item
+                        v-for="(item, index) in list"
+                        :key="index"
+                        :index="index"
+                        :text="item.text"
+                        :is-checked="item.isChecked"
+                        :hide-divider="index < list.length - 1"
+                        @itemRemoved="remove"
+                        @itemChecked="check"
+                    />
                     <app-form
                         @itemAdded="add"
                     />
@@ -53,13 +34,16 @@
 <script>
 import AppFooter from './components/Footer.vue';
 import AppForm from './components/Form.vue';
+import AppItem from './components/Item.vue';
 
 const STORAGE_KEY = 'todo-storage';
+const LIST_IN_STORAGE = localStorage.getItem( STORAGE_KEY );
 
 export default {
     components : {
         AppFooter,
         AppForm,
+        AppItem,
     },
     data() {
         return {
@@ -96,7 +80,7 @@ export default {
         },
     },
     created() {
-        this.list = JSON.parse( localStorage.getItem( STORAGE_KEY ) || this.list );
+        this.list = LIST_IN_STORAGE ? JSON.parse( LIST_IN_STORAGE ) : this.list;
     },
     methods : {
         add( item ) {
@@ -104,6 +88,12 @@ export default {
                 text      : item,
                 isChecked : false,
             } );
+            localStorage.setItem( STORAGE_KEY, JSON.stringify( this.list ) );
+        },
+        check( i ) {
+            let item = this.list[ i ];
+
+            item.isChecked = !item.isChecked;
             localStorage.setItem( STORAGE_KEY, JSON.stringify( this.list ) );
         },
         remove( i ) {
@@ -124,122 +114,27 @@ export default {
 </script>
 
 <style lang="less">
-  body {
-    background-image: linear-gradient( 135deg, #FFD26F 10%, #3677FF 100%);
-    min-height: 100vh;
-  }
-  .todo {
-    background: #fff;
-    box-shadow: 0px 3px 3px rgba(17, 56, 86, 0.05);
-    margin-top: 24px;
-    border: 1px solid #eee;
-    padding: 24px;
-    border-radius: 10px;
-
-    &__title {
-      font-size: 36px;
-      color: #333;
-      margin-bottom: 24px;
-
-      @media (max-width: 768px){
-        font-size: 26px;
-      }
+    body {
+        background-image: linear-gradient( 135deg, #FFD26F 10%, #3677FF 100%);
+        min-height: 100vh;
     }
+    .todo {
+        background: #fff;
+        box-shadow: 0px 3px 3px rgba(17, 56, 86, 0.05);
+        margin-top: 24px;
+        border: 1px solid #eee;
+        padding: 24px;
+        border-radius: 10px;
 
-    &__remove-btn {
-      display: block;
-      padding-left: 6px;
+        &__title {
+            font-size: 36px;
+            color: #333;
+            margin-bottom: 24px;
 
-      &:focus {
-        outline: none;
-      }
+            @media (max-width: 768px){
+                font-size: 26px;
+            }
+        }
     }
-
-    &__counters {
-      color: #333;
-      font-size: 15px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      @media (max-width: 768px){
-        flex-direction: column;
-      }
-    }
-
-    &__clean-btn {
-      @media (max-width: 768px){
-        order: -1;
-        flex-grow: 1;
-        margin-bottom: 12px;
-      }
-    }
-
-  &__label {
-    cursor: pointer;
-    color: #333;
-    font-size: 18px;
-    margin: 0;
-    display: block;
-    flex-grow: 1;
-  }
-  &__list-item {
-    position: relative;
-    margin-bottom: 6px;
-
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
-  &__list-item-text {
-    transition: .15s ease-in;
-  }
-
-  &__list-item-wrapper {
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: space-between;
-    align-items: center;
-  }
-  &__checkbox + &__list-item-text:hover:before {
-    color: #fe4365;
-  }
-  &__checkbox {
-    display: none;
-  }
-  &__checkbox + &__list-item-text:before {
-    content: "";
-    color: #dddfe6;
-    font-family: "fontAwesome";
-    line-height: 1;
-    width: 1em;
-    display: inline-block;
-    margin-right: 8px;
-  }
-  &__checkbox:checked + &__list-item-text:before {
-    content: "";
-    color: #fe4365;
-    animation: tick 150ms ease-in;
-  }
-  &__checkbox:checked + &__list-item-text {
-    color: #7e7e7e;
-  }
-  &__checkbox:disabled + &__list-item-text:before {
-    content: "";
-    color: #dddfe6;
-  }
-  }
-
-  @keyframes tick {
-    0% {
-      transform: scale(0);
-    }
-    90% {
-      transform: scale(1.3);
-    }
-    100% {
-      transform: scale(1);
-    }
-  }
-  @import "https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css";
+    @import "https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css";
 </style>
