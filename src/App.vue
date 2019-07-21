@@ -84,38 +84,36 @@ export default {
     created() {
         this.list = LIST_IN_STORAGE ? JSON.parse( LIST_IN_STORAGE ) : this.list;
     },
+    updated() {
+        this.saveToLocal();
+    },
     methods : {
         add( item ) {
             this.list.push( {
                 text      : item,
                 isChecked : false,
             } );
-            localStorage.setItem( STORAGE_KEY, JSON.stringify( this.list ) );
         },
         check( i ) {
             let item = this.list[ i ];
 
             item.isChecked = !item.isChecked;
-            localStorage.setItem( STORAGE_KEY, JSON.stringify( this.list ) );
         },
         clean() {
             this.list = this.list.filter( ( item ) => {
                 return !item.isChecked;
             } );
-            localStorage.setItem( STORAGE_KEY, JSON.stringify( this.list ) );
         },
         edit( newText, i ) {
             let item = this.list[ i ];
 
             item.text = newText;
-            localStorage.setItem( STORAGE_KEY, JSON.stringify( this.list ) );
         },
         remove( i ) {
             this.list.splice( i, 1 );
-            localStorage.setItem( STORAGE_KEY, JSON.stringify( this.list ) );
         },
         saveToLocal() {
-            localStorage.setItem( 'list', this.list );
+            localStorage.setItem( STORAGE_KEY, JSON.stringify( this.list ) );
         },
     },
 };
