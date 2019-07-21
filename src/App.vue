@@ -1,110 +1,126 @@
 <template>
-  <div class="container">
-      <div class="row">
-          <div class="col-lg-8 col-12 mx-auto">
-            <div class="todo">
-              <h1 class="todo__title">Todo-list on Vue.js</h1>
-              <div v-for="(item, index) in list" :key="index" :isChecked="item.isChecked">
-                <div class="todo__list-item" :class="item.isChecked ? 'todo__list-item_state_finished' : ''">
-                  <div class="todo__list-item-wrapper">
-                    <label class="todo__label">
-                      <input class="todo__checkbox" type="checkbox" v-model="item.isChecked">
-                      <span class="todo__list-item-text">{{ item.text }}</span>
-                    </label>
-                    <button type="button" class="close todo__remove-btn" @click="remove(index)">
-                      <span>&times;</span>
-                    </button>
-                  </div>
-                  <hr v-if="index < list.length - 1">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-12 mx-auto">
+                <div class="todo">
+                    <h1 class="todo__title">
+                        Todo-list on Vue.js
+                    </h1>
+                    <div 
+                        v-for="(item, index) in list" 
+                        :key="index" 
+                        :isChecked="item.isChecked"
+                    >
+                        <div 
+                            class="todo__list-item" 
+                            :class="item.isChecked ? 'todo__list-item_state_finished' : ''"
+                        >
+                            <div class="todo__list-item-wrapper">
+                                <label class="todo__label">
+                                    <input
+                                        v-model="item.isChecked"
+                                        class="todo__checkbox" 
+                                        type="checkbox" 
+                                    >
+                                    <span class="todo__list-item-text">{{ item.text }}</span>
+                                </label>
+                                <button 
+                                    type="button" 
+                                    class="close todo__remove-btn"
+                                    @click="remove(index)"
+                                >
+                                    <span>&times;</span>
+                                </button>
+                            </div>
+                            <hr v-if="index < list.length - 1">
+                        </div>
+                    </div>
+                    <app-form
+                        @itemAdded="add"
+                    />
+                    <hr>
+                    <app-footer
+                        :total="total"
+                        :finished="finished"
+                        @listCleaned="clean"
+                    />
                 </div>
-              </div>
-              <form class="todo__add" @submit.prevent="add">
-                <input v-model="newItem" type="text" class="todo__add-input" placeholder="Type something here..." required>
-                <input type="submit" class="btn btn-primary btn-sm todo__add-btn" value="Add" :disabled="!newItem.length">
-              </form>
-              <hr>
-              <div class="todo__counters">
-                <div class="todo__counter">Total: {{ total }}</div>
-                <button class="btn btn-primary btn-sm todo__clean-btn" @click="clean">Remove all finished tasks</button>
-                <div class="todo__counter">Finished: {{ finished }}</div>
-              </div>
             </div>
-          </div>
-      </div>
-  </div>
+        </div>
+    </div>
 </template>
 
 <script>
-const STORAGE_KEY = 'todo-storage'
+import AppFooter from './components/Footer.vue';
+import AppForm from './components/Form.vue';
+
+const STORAGE_KEY = 'todo-storage';
 
 export default {
-  data () {
-    return {
-      list: [
-        {
-          text: 'Add something',
-          isChecked: false
+    components : {
+        AppFooter,
+        AppForm,
+    },
+    data() {
+        return {
+            list : [
+                {
+                    text      : 'Add something',
+                    isChecked : false,
+                },
+                {
+                    text      : 'Remove this',
+                    isChecked : false,
+                },
+                {
+                    text      : 'This task is already finished',
+                    isChecked : true,
+                },
+            ],
+        };
+    },
+    computed : {
+        total() {
+            return this.list.length;
         },
-        {
-          text: 'Remove this',
-          isChecked: false
+        finished() {
+            let done = 0;
+
+            this.list.forEach( ( item ) => {
+                if ( item.isChecked ) {
+                    done++;
+                }
+            } );
+
+            return done;
         },
-        {
-          text: 'This task is already finished',
-          isChecked: true
-        }
-      ],
-      newItem: ''
-    }
-  },
-  created () {
-    this.list = JSON.parse(localStorage.getItem(STORAGE_KEY) || this.list)
-  },
-  computed: {
-    total () {
-      return this.list.length
     },
-    finished () {
-      let done = 0
-
-      this.list.forEach((item) => {
-        if (item.isChecked) {
-          done++
-        }
-      })
-
-      return done
-    }
-  },
-  methods: {
-    add () {
-      let item = this.newItem
-
-      if (item) {
-        this.list.push({
-          text: item,
-          isChecked: false
-        })
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(this.list))
-      }
-
-      this.newItem = ''
+    created() {
+        this.list = JSON.parse( localStorage.getItem( STORAGE_KEY ) || this.list );
     },
-    remove (i) {
-      this.list.splice(i, 1)
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.list))
+    methods : {
+        add( item ) {
+            this.list.push( {
+                text      : item,
+                isChecked : false,
+            } );
+            localStorage.setItem( STORAGE_KEY, JSON.stringify( this.list ) );
+        },
+        remove( i ) {
+            this.list.splice( i, 1 );
+            localStorage.setItem( STORAGE_KEY, JSON.stringify( this.list ) );
+        },
+        clean() {
+            this.list = this.list.filter( ( item ) => {
+                return !item.isChecked;
+            } );
+            localStorage.setItem( STORAGE_KEY, JSON.stringify( this.list ) );
+        },
+        saveToLocal() {
+            localStorage.setItem( 'list', this.list );
+        },
     },
-    clean () {
-      this.list = this.list.filter((item) => {
-        return !item.isChecked
-      })
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.list))
-    },
-    saveToLocal () {
-      localStorage.setItem('list', this.list)
-    }
-  }
-}
+};
 </script>
 
 <style lang="less">
@@ -127,47 +143,6 @@ export default {
 
       @media (max-width: 768px){
         font-size: 26px;
-      }
-    }
-
-    &__add {
-      width: 100%;
-      display: flex;
-      margin-top: 36px;
-
-      @media (max-width: 768px){
-        flex-direction: column;
-      }
-    }
-
-    &__add-btn {
-      border-radius: 4px;
-
-      @media (max-width: 768px){
-        margin-top: 12px;
-      }
-    }
-
-    &__add-input {
-      display: block;
-      flex-grow: 1;
-      padding: 6px 12px;
-      margin-right: 6px;
-      font-size: 15px;
-      line-height: 1.5;
-      color: #333;
-      background-color: #fff;
-      background-clip: padding-box;
-      border: 1px solid #ced4da;
-      border-radius: 4px;
-      transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-
-      &:focus {
-        outline: none;
-      }
-
-      @media (max-width: 768px){
-        margin-right: 0;
       }
     }
 
