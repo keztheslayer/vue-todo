@@ -6,17 +6,23 @@
                     <h1 class="todo__title">
                         {{ title }}
                     </h1>
-                    <app-item
-                        v-for="(item, index) in list"
-                        :key="index"
-                        :index="index"
-                        :text="item.text"
-                        :is-checked="item.isChecked"
-                        :hide-divider="index < list.length - 1"
-                        @itemRemoved="remove"
-                        @itemChecked="check"
-                        @itemTextChanged="edit"
-                    />
+                    <transition-group 
+                        name="slide" 
+                        tag="div"
+                        mode="in-out"
+                    >
+                        <app-item
+                            v-for="(item, index) in list"
+                            :key="index"
+                            :index="index"
+                            :text="item.text"
+                            :is-checked="item.isChecked"
+                            :hide-divider="index < list.length - 1"
+                            @itemRemoved="remove"
+                            @itemChecked="check"
+                            @itemTextChanged="edit"
+                        />
+                    </transition-group>
                     <app-form
                         @itemAdded="add"
                     />
@@ -142,5 +148,23 @@ export default {
             }
         }
     }
+
+    .slide-enter-active, .slide-leave-active {
+        transition: all 0.3s;
+    }
+
+    .slide-enter {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    
+    .slide-leave-to {
+        opacity: 0;
+    }
+
+    .slide-move {
+        transition: 0.3s;
+    }
+
     @import "https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css";
 </style>
