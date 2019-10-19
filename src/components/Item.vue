@@ -1,26 +1,26 @@
 <template>
-    <div 
-        class="todo__list-item" 
+    <div
+        class="todo__list-item"
         :class="isChecked ? 'todo__list-item_state_finished' : ''"
     >
         <div class="todo__list-item-wrapper">
             <label class="todo__label">
                 <input
                     v-model="isChecked"
-                    class="todo__checkbox" 
+                    class="todo__checkbox"
                     type="checkbox"
-                    @click="emitItemCheck(index)"
+                    @click="checkItem( index )"
                 >
                 <span class="todo__list-item-text">{{ text }}</span>
             </label>
-            <button 
+            <button
                 class="todo__list-item-edit"
-                @click="emitItemTextChange"
+                @click="editTask( index )"
             />
-            <button 
-                type="button" 
+            <button
+                type="button"
                 class="close todo__remove-btn"
-                @click="emitRemove(index)"
+                @click="removeTask( index )"
             >
                 <span>&times;</span>
             </button>
@@ -30,6 +30,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
     props : {
         isChecked : {
@@ -49,23 +51,12 @@ export default {
             default : true,
         },
     },
-    data() {
-        return {
-            itemText : this.text,
-        };
-    },
     methods : {
-        emitRemove() {
-            this.$emit( 'itemRemoved', this.index );
-        },
-        emitItemCheck() {
-            this.$emit( 'itemChecked', this.index );
-        },
-        emitItemTextChange() {
-            this.itemText = window.prompt( 'Edit task', this.itemText ) || this.itemText;
-
-            this.$emit( 'itemTextChanged', this.itemText, this.index );
-        },
+        ...mapActions( [
+            'editTask',
+            'checkItem',
+            'removeTask',
+        ] ),
     },
 };
 </script>

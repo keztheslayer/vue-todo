@@ -1,21 +1,23 @@
 <template>
     <footer class="todo__counters">
         <div class="todo__counter">
-            Total: {{ total }}
+            Total: {{ totalItems }}
         </div>
         <button
             class="btn btn-primary btn-sm todo__clean-btn"
-            @click="emitCleanEvent"
+            @click="removeFinishedTasks"
         >
             Remove all finished tasks
         </button>
         <div class="todo__counter">
-            Finished: {{ finished }}
+            Finished: {{ finishedTasks }}
         </div>
     </footer>
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex';
+
 export default {
     props : {
         total : {
@@ -27,10 +29,16 @@ export default {
             default : 0,
         },
     },
+    computed : {
+        ...mapGetters( [
+            'finishedTasks',
+            'totalItems',
+        ] ),
+    },
     methods : {
-        emitCleanEvent() {
-            this.$emit('listCleaned');
-        },
+        ...mapActions( [
+            'removeFinishedTasks',
+        ] ),
     },
 };
 </script>

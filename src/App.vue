@@ -6,32 +6,23 @@
                     <h1 class="todo__title">
                         {{ title }}
                     </h1>
-                    <transition-group 
-                        name="slide" 
+                    <transition-group
+                        name="slide"
                         tag="div"
                         mode="in-out"
                     >
                         <app-item
-                            v-for="(item, index) in list"
+                            v-for="(item, index) in tasksList"
                             :key="index"
                             :index="index"
                             :text="item.text"
                             :is-checked="item.isChecked"
-                            :hide-divider="index < list.length - 1"
-                            @itemRemoved="remove"
-                            @itemChecked="check"
-                            @itemTextChanged="edit"
+                            :hide-divider="index < tasksList.length - 1"
                         />
                     </transition-group>
-                    <app-form
-                        @itemAdded="add"
-                    />
+                    <app-form />
                     <hr>
-                    <app-footer
-                        :total="total"
-                        :finished="finished"
-                        @listCleaned="clean"
-                    />
+                    <app-footer />
                 </div>
             </div>
         </div>
@@ -42,6 +33,7 @@
 import AppFooter from './components/Footer.vue';
 import AppForm from './components/Form.vue';
 import AppItem from './components/Item.vue';
+import { mapGetters } from 'vuex';
 
 const STORAGE_KEY = 'todo-storage';
 const LIST_IN_STORAGE = localStorage.getItem( STORAGE_KEY );
@@ -52,74 +44,19 @@ export default {
         AppForm,
         AppItem,
     },
-    data() {
-        return {
-            title : 'To-Do list made on Vue.js',
-            list  : [
-                {
-                    text      : 'Add something',
-                    isChecked : false,
-                },
-                {
-                    text      : 'Remove this',
-                    isChecked : false,
-                },
-                {
-                    text      : 'This task is already finished',
-                    isChecked : true,
-                },
-            ],
-        };
-    },
     computed : {
-        total() {
-            return this.list.length;
-        },
-        finished() {
-            let done = 0;
-
-            this.list.forEach( ( item ) => {
-                if ( item.isChecked ) {
-                    done++;
-                }
-            } );
-
-            return done;
-        },
-    },
-    created() {
-        this.list = LIST_IN_STORAGE ? JSON.parse( LIST_IN_STORAGE ) : this.list;
+        ...mapGetters( [
+            'tasksList',
+            'title',
+            'finishedTasks',
+        ] ),
     },
     updated() {
         this.saveToLocal();
     },
     methods : {
-        add( item ) {
-            this.list.push( {
-                text      : item,
-                isChecked : false,
-            } );
-        },
-        check( i ) {
-            let item = this.list[ i ];
-
-            item.isChecked = !item.isChecked;
-        },
-        clean() {
-            this.list = this.list.filter( ( item ) => {
-                return !item.isChecked;
-            } );
-        },
-        edit( newText, i ) {
-            let item = this.list[ i ];
-
-            item.text = newText;
-        },
-        remove( i ) {
-            this.list.splice( i, 1 );
-        },
         saveToLocal() {
-            localStorage.setItem( STORAGE_KEY, JSON.stringify( this.list ) );
+            localStorage.setItem( STORAGE_KEY, JSON.stringify( this.tasksList ) );
         },
     },
 };
@@ -157,7 +94,7 @@ export default {
         opacity: 0;
         transform: translateY(30px);
     }
-    
+
     .slide-leave-to {
         opacity: 0;
     }

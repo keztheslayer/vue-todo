@@ -1,41 +1,46 @@
 <template>
-    <form 
-        class="todo__add" 
-        @submit.prevent="emitItemAdded"
+    <form
+        class="todo__add"
+        @submit.prevent="addTaskWithReset()"
     >
-        <input 
-            v-model="newItem"
-            type="text" 
-            class="todo__add-input" 
-            placeholder="Type something here..." 
+        <input
+            v-model="newTask"
+            type="text"
+            class="todo__add-input"
+            placeholder="Type something here..."
             required
         >
-        <input 
-            type="submit" 
-            class="btn btn-primary btn-sm todo__add-btn" 
-            value="Add" 
-            :disabled="!newItem.length"
-        >   
+        <input
+            type="submit"
+            class="btn btn-primary btn-sm todo__add-btn"
+            value="Add"
+            :disabled="!newTask.length"
+        >
     </form>
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
     data() {
         return {
-            newItem : '',
+            newTask : '',
         };
     },
     methods : {
-        emitItemAdded() {
-            let item = this.newItem.toString();
+        ...mapActions( [
+            'addTask',
+        ] ),
+        addTaskWithReset() {
+            let taskText = this.newTask.toString();
 
-            if ( item ) {
-                this.$emit( 'itemAdded', item );
+            if ( taskText ) {
+                this.addTask( taskText );
             }
 
-            this.newItem = '';
-        },
+            this.newTask = '';
+        }
     },
 };
 </script>
