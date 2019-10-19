@@ -19,16 +19,6 @@
 import { mapGetters, mapActions } from 'vuex';
 
 export default {
-    props : {
-        total : {
-            type    : Number,
-            default : 0,
-        },
-        finished : {
-            type    : Number,
-            default : 0,
-        },
-    },
     computed : {
         ...mapGetters( [
             'finishedTasks',
