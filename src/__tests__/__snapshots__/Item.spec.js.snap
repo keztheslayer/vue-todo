@@ -1,0 +1,81 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Item.vue renders unchecked task with divider 1`] = `
+<div
+  class="todo__list-item todo__list-item_state_finished"
+>
+  <div
+    class="todo__list-item-wrapper"
+  >
+    <label
+      class="todo__label"
+    >
+      <input
+        class="todo__checkbox"
+        type="checkbox"
+      />
+       
+      <span
+        class="todo__list-item-text"
+      >
+        Checked task
+      </span>
+    </label>
+     
+    <button
+      class="todo__edit-button"
+    />
+     
+    <button
+      class="close todo__remove-button"
+      type="button"
+    >
+      <span>
+        ×
+      </span>
+    </button>
+  </div>
+   
+  <!---->
+</div>
+`;
+
+exports[`Item.vue renders unchecked task without divider 1`] = `
+<div
+  class="todo__list-item"
+>
+  <div
+    class="todo__list-item-wrapper"
+  >
+    <label
+      class="todo__label"
+    >
+      <input
+        class="todo__checkbox"
+        type="checkbox"
+      />
+       
+      <span
+        class="todo__list-item-text"
+      >
+        Unchecked task
+      </span>
+    </label>
+     
+    <button
+      class="todo__edit-button"
+    />
+     
+    <button
+      class="close todo__remove-button"
+      type="button"
+    >
+      <span>
+        ×
+      </span>
+    </button>
+  </div>
+   
+  <hr />
+</div>
+`;

@@ -14,12 +14,12 @@
                 <span class="todo__list-item-text">{{ text }}</span>
             </label>
             <button
-                class="todo__list-item-edit"
+                class="todo__edit-button"
                 @click="editTask( index )"
             />
             <button
                 type="button"
-                class="close todo__remove-btn"
+                class="close todo__remove-button"
                 @click="removeTask( index )"
             >
                 <span>&times;</span>
@@ -92,7 +92,7 @@ export default {
         align-items: center;
     }
 
-    &__list-item-edit {
+    &__edit-button {
         display: block;
         width: 24px;
         height: 24px;
@@ -106,7 +106,7 @@ export default {
         }
     }
 
-    &__list-item-edit:before {
+    &__edit-button:before {
         content: '\f040';
         cursor: pointer;
         color: #000;
@@ -117,7 +117,7 @@ export default {
         opacity: 0.5;
         transition: opacity 0.3s;
     }
-    &__list-item-edit:hover:before {
+    &__edit-button:hover:before {
         opacity: 1;
     }
 
@@ -154,7 +154,7 @@ export default {
         color: #dddfe6;
     }
 
-    &__remove-btn {
+    &__remove-button {
         display: block;
         width: 24px;
         height: 24px;

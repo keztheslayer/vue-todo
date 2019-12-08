@@ -13,7 +13,7 @@
                     >
                         <app-item
                             v-for="(item, index) in tasksList"
-                            :key="index"
+                            :key="`item ${index}`"
                             :index="index"
                             :text="item.text"
                             :is-checked="item.isChecked"
@@ -36,7 +36,6 @@ import AppItem from './components/Item.vue';
 import { mapGetters } from 'vuex';
 
 const STORAGE_KEY = 'todo-storage';
-const LIST_IN_STORAGE = localStorage.getItem( STORAGE_KEY );
 
 export default {
     components : {
