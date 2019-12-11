@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Footer.vue renders correct markup 1`] = `
+<footer
+  class="todo__counters"
+>
+  <div
+    class="todo__counter todo__counter_type_total"
+  >
+    
+        Total: 3
+    
+  </div>
+   
+  <button
+    class="btn btn-primary btn-sm todo__clean-button"
+  >
+    
+        Remove all finished tasks
+    
+  </button>
+   
+  <div
+    class="todo__counter todo__counter_type_finished"
+  >
+    
+        Finished: 1
+    
+  </div>
+</footer>
+`;
