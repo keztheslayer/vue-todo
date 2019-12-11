@@ -1,15 +1,15 @@
 <template>
     <footer class="todo__counters">
-        <div class="todo__counter">
+        <div class="todo__counter todo__counter_type_total">
             Total: {{ totalItems }}
         </div>
         <button
-            class="btn btn-primary btn-sm todo__clean-btn"
+            class="btn btn-primary btn-sm todo__clean-button"
             @click="removeFinishedTasks"
         >
             Remove all finished tasks
         </button>
-        <div class="todo__counter">
+        <div class="todo__counter todo__counter_type_finished">
             Finished: {{ finishedTasks }}
         </div>
     </footer>
@@ -47,7 +47,7 @@ export default {
       }
     }
 
-    &__clean-btn {
+    &__clean-button {
       @media (max-width: 768px){
         order: -1;
         flex-grow: 1;
