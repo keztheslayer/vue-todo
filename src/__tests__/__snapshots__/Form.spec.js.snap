@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Form.vue renders correct markup 1`] = `
+<form
+  class="todo__add"
+>
+  <input
+    class="todo__add-input"
+    placeholder="Type something here..."
+    required="required"
+    type="text"
+  />
+   
+  <input
+    class="btn btn-primary btn-sm todo__add-button"
+    disabled="disabled"
+    type="submit"
+    value="Add"
+  />
+</form>
+`;
