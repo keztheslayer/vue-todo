@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@babel/plugin-transform-modules-commonjs": "^7.7.5",
+    "@babel/plugin-transform-runtime": "^7.7.6",
     "@regru/eslint-config-regru": "^2.5.0",
     "@vue/test-utils": "^1.0.0-beta.30",
     "babel-core": "^7.0.0-bridge",
@@ -23,6 +24,8 @@
     "eslint-plugin-jest": "^22.13.0",
     "eslint-plugin-regru": "^3.0.0",
     "jest": "^24.9.0",
+    "jest-environment-jsdom-global": "^1.2.0",
+    "jest-serializer-vue": "^2.0.2",
     "vue": "^2.6.10",
     "vue-jest": "^3.0.5",
     "vue-router": "^3.1.3",
@@ -69,6 +72,10 @@
     "transform": {
       ".*\\.(vue)$": "<rootDir>/node_modules/vue-jest",
       "^.+\\.js$": "<rootDir>/node_modules/babel-jest"
-    }
+    },
+    "testEnvironment": "jest-environment-jsdom-global",
+    "snapshotSerializers": [
+      "<rootDir>/node_modules/jest-serializer-vue"
+    ]
   }
 }

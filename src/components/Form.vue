@@ -12,7 +12,7 @@
         >
         <input
             type="submit"
-            class="btn btn-primary btn-sm todo__add-btn"
+            class="btn btn-primary btn-sm todo__add-button"
             value="Add"
             :disabled="!newTask.length"
         >
@@ -57,7 +57,7 @@ export default {
       }
     }
 
-    &__add-btn {
+    &__add-button {
       border-radius: 4px;
 
       @media (max-width: 768px){
