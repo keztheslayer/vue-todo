@@ -34,8 +34,7 @@ import AppFooter from './components/Footer.vue';
 import AppForm from './components/Form.vue';
 import AppItem from './components/Item.vue';
 import { mapGetters } from 'vuex';
-
-const STORAGE_KEY = 'todo-storage';
+import { STORAGE_KEY } from './utils';
 
 export default {
     components : {
