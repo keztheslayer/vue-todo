@@ -3,8 +3,7 @@ import Item from '../components/Item.vue';
 import { shallowMount, createLocalVue } from '@vue/test-utils';
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { exampleTasks } from './exampleTasks';
-import { STORAGE_KEY } from '../utils';
+import { testTasks, STORAGE_KEY } from '../utils';
 
 const localVue = createLocalVue();
 
@@ -19,7 +18,7 @@ describe( 'App.vue', () => {
 
     beforeEach( () => {
         state = {
-            tasks : exampleTasks,
+            tasks : testTasks,
             title : 'Example app title',
         };
 
@@ -44,63 +43,67 @@ describe( 'App.vue', () => {
         } );
     } );
 
-    it( 'displays one Item for 1 task in store', () => {
-        const wrapper = shallowMount(
-            App,
-            {
-                store,
-                localVue,
-            }
-        );
+    describe( 'Correct visual rendering', () => {
+        it( 'Displays one Item for 1 task in store', () => {
+            const wrapper = shallowMount(
+                App,
+                {
+                    store,
+                    localVue,
+                }
+            );
 
-        expect( wrapper.findAll( Item ) ).toHaveLength( getters.totalItems() );
+            expect( wrapper.findAll( Item ) ).toHaveLength( getters.totalItems() );
+        } );
+
+        it( 'Renders correct markup', () => {
+            const wrapper = shallowMount(
+                App,
+                {
+                    store,
+                    localVue,
+                }
+            );
+
+            expect( wrapper.element ).toMatchSnapshot();
+        } );
     } );
 
-    it( 'saveToLocal() method saves tasks list to localStorage', () => {
-        const wrapper = shallowMount(
-            App,
-            {
-                store,
-                localVue,
-            }
-        );
+    describe( 'works with localStorage', () => {
+        it( 'saveToLocal() method saves tasks list to localStorage', () => {
+            const wrapper = shallowMount(
+                App,
+                {
+                    store,
+                    localVue,
+                }
+            );
 
-        wrapper.vm.saveToLocal();
+            wrapper.vm.saveToLocal();
 
-        const LOCAL_LIST = JSON.parse( localStorage.getItem( STORAGE_KEY ) );
+            const LOCAL_LIST = JSON.parse( localStorage.getItem( STORAGE_KEY ) );
 
-        expect( LOCAL_LIST ).toEqual( getters.tasksList() );
-    } );
+            expect( LOCAL_LIST ).toEqual( getters.tasksList() );
+        } );
 
-    it( 'calls saveToLocal after an app-update hook', async () => {
-        const saveToLocal = jest.fn();
-        const wrapper = shallowMount(
-            App,
-            {
-                store,
-                localVue,
-                methods : {
-                    saveToLocal,
-                },
-            }
-        );
+        it( 'calls saveToLocal after an app-update hook', async () => {
+            const saveToLocal = jest.fn();
+            const wrapper = shallowMount(
+                App,
+                {
+                    store,
+                    localVue,
+                    methods : {
+                        saveToLocal,
+                    },
+                }
+            );
 
-        wrapper.vm.$forceUpdate();
+            wrapper.vm.$forceUpdate();
 
-        await Vue.nextTick();
+            await Vue.nextTick();
 
-        expect( saveToLocal ).toHaveBeenCalled();
-    } );
-
-    it( 'renders correct markup', () => {
-        const wrapper = shallowMount(
-            App,
-            {
-                store,
-                localVue,
-            }
-        );
-
-        expect( wrapper.element ).toMatchSnapshot();
+            expect( saveToLocal ).toHaveBeenCalled();
+        } );
     } );
 } );

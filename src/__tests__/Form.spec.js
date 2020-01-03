@@ -9,62 +9,118 @@ describe( 'Form.vue', () => {
         expect( wrapper.element ).toMatchSnapshot();
     } );
 
-    it( 'syncs data with input', async () => {
-        const wrapper = mount( Form );
-        const input = wrapper.find('.todo__add-input');
+    describe( 'Disabling add-button', () => {
 
-        beforeEach( () => {
-            wrapper.setData(
-                {
-                    newTask : '',
-                }
-            );
+        describe( 'Syncs data.newTask with input (v-model)', () => {
+
+            it( 'Makes data.newTask equal to input value', async () => {
+                const wrapper = mount( Form );
+                const input = wrapper.find('.todo__add-input');
+
+                beforeEach( () => {
+                    wrapper.setData(
+                        {
+                            newTask : '',
+                        }
+                    );
+                } );
+
+                input.setValue('Some input value');
+
+                await Vue.nextTick();
+
+                expect( wrapper.vm.$data.newTask ).toBe('Some input value');
+
+            } );
+
+            it( 'Makes input value equal to data.newTask', async () => {
+                const wrapper = mount( Form );
+                const input = wrapper.find('.todo__add-input');
+
+                wrapper.setData(
+                    {
+                        newTask : 'Some task in data',
+                    }
+                );
+
+                await Vue.nextTick();
+
+                expect( input.element.value ).toBe('Some task in data');
+
+            } );
         } );
 
-        input.setValue('test');
 
-        await Vue.nextTick();
+        describe( 'Button disabling depends on input value', () => {
 
-        expect( wrapper.vm.$data.newTask ).toBe('test');
+            it( 'Removes button disabled-attribute on input', async () => {
+                const wrapper = mount( Form );
+                const input = wrapper.find('.todo__add-input');
+                const button = wrapper.find('.todo__add-button');
 
-    } );
+                input.setValue('test');
 
-    it( 'enables add-button if newTask is set', async () => {
-        const wrapper = mount( Form );
-        const button = wrapper.find('.todo__add-button');
+                await Vue.nextTick();
 
-        beforeEach( () => {
-            wrapper.vm.$data.newTask = '';
+                expect( button.html() ).not.toContain('disabled');
+
+            } );
+
+            it( 'Disabled button on input', async () => {
+                const wrapper = mount( Form );
+                const input = wrapper.find('.todo__add-input');
+                const button = wrapper.find('.todo__add-button');
+
+                input.setValue('');
+
+                await Vue.nextTick();
+
+                expect( button.html() ).toContain('disabled');
+
+            } );
+
         } );
 
-        wrapper.setData(
-            {
-                newTask : 'example',
-            }
-        );
+        describe( 'Button disabling depends on newTask data-key', () => {
 
-        await Vue.nextTick();
+            it( 'Enables add-button if newTask is set', async () => {
+                const wrapper = mount( Form );
+                const button = wrapper.find('.todo__add-button');
 
-        expect( button.html() ).not.toContain('disabled');
+                beforeEach( () => {
+                    wrapper.vm.$data.newTask = '';
+                } );
 
-    } );
+                wrapper.setData(
+                    {
+                        newTask : 'example',
+                    }
+                );
 
-    it( 'disables add-button if newTask is empty', async () => {
-        const wrapper = mount( Form );
-        const button = wrapper.find('.todo__add-button');
+                await Vue.nextTick();
 
-        beforeEach( () => {
-            wrapper.vm.$data.newTask = 'a random task name';
+                expect( button.html() ).not.toContain('disabled');
+
+            } );
+
+            it( 'Disables add-button if newTask is empty', async () => {
+                const wrapper = mount( Form );
+                const button = wrapper.find('.todo__add-button');
+
+                beforeEach( () => {
+                    wrapper.vm.$data.newTask = 'a random task name';
+                } );
+
+                wrapper.setData(
+                    {
+                        newTask : '',
+                    }
+                );
+
+                await Vue.nextTick();
+
+                expect( button.html() ).toContain('disabled');
+            } );
         } );
-
-        wrapper.setData(
-            {
-                newTask : '',
-            }
-        );
-
-        await Vue.nextTick();
-
-        expect( button.html() ).toContain('disabled');
     } );
 } );
